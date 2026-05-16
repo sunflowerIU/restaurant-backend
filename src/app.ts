@@ -9,10 +9,7 @@ import paymentRouter from "./routes/payment.routes";
 
 const app = express();
 
-const whitelist = [
-  "http://localhost:3000",
-  "https://restaurant-backend-j0st.onrender.com",
-];
+const whitelist = ["http://localhost:3000", process.env.FRONTEND_URL];
 const corsOptions: CorsOptions = {
   origin: (
     origin: string | undefined,
