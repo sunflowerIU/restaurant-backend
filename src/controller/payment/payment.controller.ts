@@ -158,8 +158,8 @@ export async function initiatePayment(
         product_code: "EPAYTEST",
         product_service_charge: "0",
         product_delivery_charge: "0",
-        success_url: `http://localhost:5000/payment/esewa/success/${payment.id}`,
-        failure_url: `http://localhost:5000/payment/esewa/failure/${payment.id}`,
+        success_url: `${process.env.FRONTEND_URL}/payment/esewa/success/${payment.id}`,
+        failure_url: `${process.env.FRONTEND_URL}/payment/esewa/failure/${payment.id}`,
         signed_field_names: "total_amount,transaction_uuid,product_code",
         signature: paymentBase64String,
       },
@@ -234,9 +234,13 @@ export async function verifyPayment(req: Request, res: Response) {
     order.save();
 
     if (data.status === "COMPLETE") {
-      return res.redirect(`http://localhost:3000/payment/success/${order.id}`);
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/payment/success/${order.id}`,
+      );
     } else {
-      return res.redirect(`http://localhost:3000/payment/failed/${order.id}`);
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/payment/failed/${order.id}`,
+      );
     }
   } catch (error) {
     console.log(error);
