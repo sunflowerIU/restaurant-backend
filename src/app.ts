@@ -9,7 +9,10 @@ import paymentRouter from "./routes/payment.routes";
 
 const app = express();
 
-const whitelist = ["http://localhost:3000", process.env.FRONTEND_URL];
+const whitelist = [
+  "http://localhost:3000",
+  "https://restaurant-frontend-y3tz.vercel.app",
+];
 
 const corsOptions: CorsOptions = {
   origin: (
