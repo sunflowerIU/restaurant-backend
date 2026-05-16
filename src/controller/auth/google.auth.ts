@@ -111,8 +111,8 @@ export async function googleAuthCallbackHandler(req: Request, res: Response) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
+      secure: Boolean(process.env.COOKIE_SECURE),
+      sameSite: Boolean(process.env.COOKIE_SECURE) ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
