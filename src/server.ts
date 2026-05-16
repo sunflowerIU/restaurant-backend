@@ -6,10 +6,10 @@ import app from "./app";
 import { connectToDB } from "./config/db";
 
 const port = process.env.PORT || 5000;
-
 async function startServer() {
   await connectToDB();
 
+  // console.log("haha");
   const server = http.createServer(app);
 
   server.listen(port, () => {

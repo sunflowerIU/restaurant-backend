@@ -10,6 +10,7 @@ import paymentRouter from "./routes/payment.routes";
 const app = express();
 
 const whitelist = ["http://localhost:3000", process.env.FRONTEND_URL];
+
 const corsOptions: CorsOptions = {
   origin: (
     origin: string | undefined,
@@ -25,12 +26,6 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  }),
-);
 app.use(express.json());
 app.use(cookieParser());
 
