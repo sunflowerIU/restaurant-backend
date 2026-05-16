@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import express from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import authRouter from "./routes/auth.routes";
 import userRouter from "./routes/user.routes";
 import productRouter from "./routes/product.routes";
@@ -9,6 +9,25 @@ import paymentRouter from "./routes/payment.routes";
 
 const app = express();
 
+const whitelist = [
+  "http://localhost:3000",
+  "https://restaurant-backend-j0st.onrender.com",
+];
+const corsOptions: CorsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void,
+  ) => {
+    // !origin handles server-to-server or tools like Postman/cURL
+    if (!origin || whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Blocked by CORS"));
+    }
+  },
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(
   cors({
     origin: "http://localhost:3000",
