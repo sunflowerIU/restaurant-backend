@@ -47,7 +47,7 @@ export async function RegisterHandler(req: Request, res: Response) {
       passwordHash: hashedPassword,
       name,
       role: "user",
-      isEmailVerified: false,
+      isEmailVerified: true,
       twoFactorEnabled: false,
     });
 
