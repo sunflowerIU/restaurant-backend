@@ -140,6 +140,7 @@ export async function initiatePayment(
       amount: totalAmount,
       status: "initiated",
       gatewayTransactionId: crypto.randomUUID(),
+      userId: req.user.id,
     });
 
     const paymentString = `total_amount=${totalAmount},transaction_uuid=${payment.gatewayTransactionId},product_code=EPAYTEST`;
@@ -174,7 +175,11 @@ export async function initiatePayment(
 }
 
 //verify payment
-export async function verifyPayment(req: Request, res: Response) {
+export async function verifyPayment(req: AuthenticatedRequest, res: Response) {
+  if (!req.user) {
+    return res.status(401).json({ message: "unauthorized" });
+  }
+
   const statusType = ["failure", "success"];
   const { status, paymentId } = req.params as {
     status: string;
@@ -193,7 +198,7 @@ export async function verifyPayment(req: Request, res: Response) {
   const paymentResponse = JSON.parse(
     Buffer.from(dataString, "base64").toString("utf-8"),
   );
-  console.log(paymentResponse);
+  // console.log(paymentResponse);
   try {
     //get that payment amount
     const payment = await Payment.findById(paymentId);
@@ -202,12 +207,18 @@ export async function verifyPayment(req: Request, res: Response) {
     const order = await Order.findById(payment.orderId);
     if (!order) return res.status(400).json({ message: "invalid payment" });
 
+    if (payment.userId?.toString() !== req.user.id) {
+      return res.status(401).json({ message: "unauthorized" });
+    }
+
     // /check the status of payment
     const response = await fetch(
       `https://rc.esewa.com.np/api/epay/transaction/status/?product_code=EPAYTEST&total_amount=${payment.amount}&transaction_uuid=${paymentResponse.transaction_uuid}`,
     );
 
     const data = await response.json();
+
+    // console.log(data);
 
     if (!response.ok)
       return res
@@ -234,13 +245,13 @@ export async function verifyPayment(req: Request, res: Response) {
     order.save();
 
     if (data.status === "COMPLETE") {
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/payment/success/${order.id}`,
-      );
+      return res
+        .status(200)
+        .json({ message: "Payment successful", success: true });
     } else {
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/payment/failed/${order.id}`,
-      );
+      return res
+        .status(400)
+        .json({ message: "Payment failed", success: false });
     }
   } catch (error) {
     console.log(error);

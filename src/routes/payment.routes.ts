@@ -10,6 +10,6 @@ const router = Router();
 //initiate payment
 router.post("/initiate", requireAuth, initiatePayment);
 
-router.get("/esewa/:status/:paymentId", verifyPayment);
+router.get("/esewa/:status/:paymentId", requireAuth, verifyPayment);
 
 export default router;

@@ -12,6 +12,8 @@ const app = express();
 const whitelist = [
   "http://localhost:3000",
   "https://restaurant-frontend-y3tz.vercel.app",
+  "https://www.amit-tamang.click",
+  "amit-tamang.click",
 ];
 
 const corsOptions: CorsOptions = {

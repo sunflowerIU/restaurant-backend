@@ -194,6 +194,7 @@ export async function loginHandler(req: Request, res: Response) {
 export async function refreshHandler(req: Request, res: Response) {
   try {
     const token = req.cookies?.refreshToken as string | undefined;
+    console.log(token);
 
     if (!token) {
       return res.status(401).json({
@@ -238,7 +239,6 @@ export async function refreshHandler(req: Request, res: Response) {
     //refresh token
     const refreshToken = createRefreshToken(user.id, user.tokenVersion);
 
-    const isProd = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.COOKIE_SECURE === "true",
