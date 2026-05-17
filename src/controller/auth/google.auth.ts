@@ -107,12 +107,11 @@ export async function googleAuthCallbackHandler(req: Request, res: Response) {
     );
 
     const refreshToken = createRefreshToken(user.id, user.tokenVersion);
-    const isProd = process.env.NODE_ENV === "production";
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: Boolean(process.env.COOKIE_SECURE),
-      sameSite: Boolean(process.env.COOKIE_SECURE) ? "none" : "lax",
+      secure: process.env.COOKIE_SECURE === "true",
+      sameSite: process.env.COOKIE_SECURE === "true" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
